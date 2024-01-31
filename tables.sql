@@ -15,6 +15,7 @@ CREATE TABLE Tasks(
     deadline DATE NOT NULL,
     importance int NOT NULL,
     is_complete BIT(1),
+    completion_date DATE NOT NULL,
     foreign key(email) references User(email),
     primary key(task_id,email)
 );
@@ -28,3 +29,4 @@ CREATE TABLE feedback(
     foreign key(task) references Tasks(task_id)
     primary key(task_id,email)
 );
+
