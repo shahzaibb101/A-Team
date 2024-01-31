@@ -12,7 +12,19 @@ CREATE TABLE Tasks(
     email varchar(50),
     task_name varchar(50) NOT NULL,
     task_desc varchar(255) NOT NULL,
+    deadline DATE NOT NULL,
+    importance int NOT NULL,
+    is_complete BIT(1),
     foreign key(email) references User(email),
     primary key(task_id,email)
 );
 
+CREATE TABLE feedback(
+    email varchar(50),
+    task_id int,
+    rating numeric(1,0),
+    comment varchar(255),
+    foreign key(email) references User(email),
+    foreign key(task) references Tasks(task_id)
+    primary key(task_id,email)
+);
