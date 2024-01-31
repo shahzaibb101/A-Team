@@ -1,9 +1,10 @@
 CREATE TABLE user(
-    id int PRIMARY KEY,
-    LastName varchar(255),
-    FirstName varchar(255),
-    username varchar(255),
-    password varchar(255)
+    email varchar(50),
+    last_name varchar(50)NOT NULL,
+    first_name varchar(50)NOT NULL,
+    username varchar(50)NOT NULL,
+    password varchar(32) NOT NULL,
+    primary key (email)
 );
 
 CREATE TABLE tasks(
