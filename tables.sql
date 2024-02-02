@@ -26,7 +26,7 @@ CREATE TABLE Feedback(
     rating numeric(1,0) NOT NULL,
     comment varchar(255),
     foreign key(email) references User(email),
-    foreign key(task) references Tasks(task_id)
+    foreign key(task_id) references Tasks(task_id),
     primary key(task_id,email)
 );
 
@@ -38,13 +38,13 @@ CREATE TABLE Work_Session(
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     foreign key(email) references User(email),
-    foreign key(task_id) references Tasks(task_id)
+    foreign key(task_id) references Tasks(task_id),
     primary key(session_id,email,task_id)
-)
+);
 
 CREATE TABLE Admin(
     username varchar(50) NOT NULL,
     password varchar(50) NOT NULL,
     branch varchar(50) NOT NULL,
     primary key(username)
-)
+);
