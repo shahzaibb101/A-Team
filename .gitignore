@@ -1,6 +1,8 @@
+.idea
 .venv
 *.pyc
 *.pyo
+pycache/*
 .installed.cfg
 bin
 develop-eggs
