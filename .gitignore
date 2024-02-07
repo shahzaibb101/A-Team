@@ -3,6 +3,7 @@
 *.pyc
 *.pyo
 pycache/*
+__pycache__/
 .installed.cfg
 bin
 develop-eggs
