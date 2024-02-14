@@ -11,3 +11,6 @@ def hello(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def signup(request):
+    return render(request, 'signup.html')
