@@ -14,3 +14,4 @@ def register(request):
 	else:
 		register_form =  CustomRegisterForm()
 	return render(request,'register.html',{'register_form':register_form})
+
