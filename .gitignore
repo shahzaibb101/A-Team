@@ -1,5 +1,7 @@
-.idea
-.venv
+.idea/
+.venv/
+.vscode/
+.DS_Store
 *.pyc
 *.pyo
 pycache/*
