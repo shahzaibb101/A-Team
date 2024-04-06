@@ -27,3 +27,4 @@ gunicorn==20.0.4
 whitenoise==5.2.0
 django-crispy-forms
 django-environ==0.11.2
+crispy-bootstrap4
