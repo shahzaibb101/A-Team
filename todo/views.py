@@ -37,6 +37,17 @@ def about(request):
 	return render(request,'about.html',context)
 
 @login_required
+def add_task(request):
+	form = TaskForm()
+	if request.method == 'POST':
+		form = TaskForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect(todolist)
+	return render(request,'addtask.html',{'form': form})
+
+
+@login_required
 def delete_task(request, task_id):
 	task =TaskList.objects.get(pk=task_id)
 	if task.manage == request.user:
