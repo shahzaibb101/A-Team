@@ -40,7 +40,7 @@ def about(request):
 def add_task(request):
 	form = TaskForm()
 	if request.method == 'POST':
-		form = TaskForm(request.POST)
+		form = TaskForm(request.POST,instance=TaskList(manage=request.user))
 		if form.is_valid():
 			form.save()
 			return redirect(todolist)
