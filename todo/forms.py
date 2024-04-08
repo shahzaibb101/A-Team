@@ -12,9 +12,12 @@ class TaskForm(forms.ModelForm):
             'task_Assign_Date': forms.DateInput(attrs={'type': 'date'}),
             'deadline': forms.DateInput(attrs={'type': 'date'}),
         }
+	def clean(self):
+		cleaned_data = super().clean()
+		task_name = cleaned_data.get('task')
+		due_date = cleaned_data.get('deadline')
 
-	def clean_deadline(self):
-		deadline = self.cleaned_data.get('deadline')
-		if deadline and deadline < timezone.now().date():
-			raise ValidationError('The deadline must be today or in the future.')
-		return deadline
+		if TaskList.objects.filter(task=task_name, deadline=due_date).exists():
+			raise forms.ValidationError('The combination of Task and Deadline already exists.')
+
+		return cleaned_data
