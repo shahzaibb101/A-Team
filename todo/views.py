@@ -5,6 +5,7 @@ from todo.forms import TaskForm
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render, get_object_or_404
 
 @login_required
 def todolist(request):
@@ -43,6 +44,7 @@ def add_task(request):
 		form = TaskForm(request.POST,instance=TaskList(manage=request.user))
 		if form.is_valid():
 			form.save()
+
 			return redirect(todolist)
 	return render(request,'addtask.html',{'form': form})
 
@@ -56,19 +58,19 @@ def delete_task(request, task_id):
 		messages.error(request,("Access Restricted,you are not allowed."))	
 	return redirect('todolist')
 
-@login_required	
-def edit_task(request, task_id):
-	if request.method == "POST":
-		task = TaskList.objects.get(pk=task_id)
-		form = TaskForm(request.POST or None, instance = task)
-		if form.is_valid():
-			form.save()
+@login_required
 
-		messages.success(request,("Task Edited!"))
-		return redirect('todolist')
-	else:
-		task_obj = TaskList.objects.get(pk=task_id)
-		return render(request, 'edit.html',{'task_obj': task_obj})
+def edit_task(request, task_id):
+    task = TaskList.objects.get(pk=task_id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            messages.success(request, ("Task Edited!"))
+            return redirect('todolist')
+    else:
+        form = TaskForm(instance=task)
+    return render(request, 'addtask.html', {'form': form, 'task_id': task_id})
 
 @login_required		
 def complete_task(request, task_id):
