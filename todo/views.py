@@ -87,8 +87,16 @@ def pending_task(request, task_id):
 	task = TaskList.objects.get(pk=task_id)
 	task.done = False
 	task.save()
-	return redirect('todolist')
+	return redirect('completed')
 	
 def index(request):
 	context = { 'index_text':"Welcome Index Page."}
 	return render(request, 'index.html', context)
+
+def completed(request):
+		all_tasks = TaskList.objects.filter(manage=request.user)
+		paginator = Paginator(all_tasks, 3)
+		page = request.GET.get('pg')
+		all_tasks = paginator.get_page(page) 
+		
+		return render(request,'completed.html',{'all_tasks' : all_tasks})
