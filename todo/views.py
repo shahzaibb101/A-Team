@@ -24,18 +24,6 @@ def todolist(request):
 		all_tasks = paginator.get_page(page) 
 		
 		return render(request,'todolist.html',{'all_tasks' : all_tasks})
-		
-def contact(request):
-	context = {
-				'contact_text':"welcome contact page"			
-			}
-	return render(request,'contact.html',context)
-
-def about(request):
-	context = {
-				'about_text':"welcome about page",
-			}
-	return render(request,'about.html',context)
 
 @login_required
 def add_task(request):
@@ -100,3 +88,6 @@ def completed(request):
 		all_tasks = paginator.get_page(page) 
 		
 		return render(request,'completed.html',{'all_tasks' : all_tasks})
+
+def profile(request):
+	return render(request,'profile.html')
