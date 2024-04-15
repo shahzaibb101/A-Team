@@ -9,21 +9,40 @@ from django.shortcuts import redirect, render, get_object_or_404
 
 @login_required
 def todolist(request):
+	# Check if the form has been submitted
 	if request.method == "POST":
 		form = TaskForm(request.POST or None)
 		if form.is_valid():
 			instance = form.save(commit=False)
 			instance.manage = request.user
 			instance.save()
-		messages.success(request,("New Task Added!"))
-		return redirect('todolist')
+			messages.success(request, ("New Task Added!"))
+			return redirect('todolist')
 	else:
-		all_tasks = TaskList.objects.filter(manage=request.user)
-		paginator = Paginator(all_tasks, 3)
-		page = request.GET.get('pg')
-		all_tasks = paginator.get_page(page) 
-		
-		return render(request,'todolist.html',{'all_tasks' : all_tasks})
+		task_filter = request.GET.get('filter', 'all')
+		filter = ""
+		if task_filter == 'completed':
+			all_tasks = TaskList.objects.filter(manage=request.user, done = 1)
+			paginator = Paginator(all_tasks, 3)
+			page = request.GET.get('pg')
+			all_tasks = paginator.get_page(page)
+			filter = 'completed'
+
+		elif task_filter == 'incomplete':
+			all_tasks = TaskList.objects.filter(manage=request.user, done=0)
+			filter = 'incomplete'
+		elif task_filter == 'due_date':
+			all_tasks = TaskList.objects.filter(manage=request.user).order_by('-deadline')
+			filter = 'due_date'
+		elif task_filter == 'priority':
+			all_tasks = TaskList.objects.filter(manage=request.user).order_by('importance')
+			filter = 'priority'
+		else:
+			all_tasks = TaskList.objects.filter(manage=request.user)
+			filter = 'all'
+
+		return render(request, 'todolist.html', {'all_tasks': all_tasks, 'selected_filter': filter})
+
 
 @login_required
 def add_task(request):
