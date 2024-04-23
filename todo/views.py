@@ -6,6 +6,9 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils import timezone
+from celery import shared_task
+
 
 @login_required	
 def index(request):
@@ -101,6 +104,10 @@ def complete_task(request, task_id):
 		messages.error(request,("Access Restricted,you are not allowed."))
 	return redirect('todolist')
 
+@login_required		
+def shop(request):
+	return render(request, 'shop.html')
+
 @login_required	
 def pending_task(request, task_id):
 	task = TaskList.objects.get(pk=task_id)
@@ -118,3 +125,19 @@ def completed(request):
 
 def profile(request):
 	return render(request,'profile.html')
+
+@shared_task
+def update_task_priorities(request):
+    todo_tasks = TaskList.objects.filter(manage=request.user, done=0)
+
+    now = timezone.now()
+
+    for task in todo_tasks:
+        remaining_time = task.deadline - now.date()
+
+        if remaining_time.days <= 3:
+            task.importance = max(task.importance - 1, 1)
+        else:
+            pass
+
+        task.save()
