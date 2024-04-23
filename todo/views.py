@@ -7,6 +7,14 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
+@login_required	
+def index(request):
+	all_tasks = TaskList.objects.filter(manage=request.user, done=0)
+	imp_tasks = TaskList.objects.filter(manage=request.user).order_by('importance')
+	com_tasks = TaskList.objects.filter(manage=request.user, done = 1)
+	context = { 'index_text':"Welcome Index Page.", 'all_tasks': all_tasks, 'imp_tasks': imp_tasks, 'com_tasks': com_tasks}
+	return render(request, 'index.html', context)
+
 @login_required
 def todolist(request):
 	# Check if the form has been submitted
@@ -41,7 +49,12 @@ def todolist(request):
 			all_tasks = TaskList.objects.filter(manage=request.user)
 			filter = 'all'
 
-		return render(request, 'todolist.html', {'all_tasks': all_tasks, 'selected_filter': filter})
+		todo_tasks = TaskList.objects.filter(manage=request.user, done=0)
+		completed_tasks = TaskList.objects.filter(manage=request.user, done = 1)
+
+		priority_tasks = TaskList.objects.filter(manage=request.user, done=0, importance__lt=5)
+
+		return render(request, 'todolist.html', {'all_tasks': all_tasks, 'selected_filter': filter, 'todo_tasks': todo_tasks, 'completed_tasks': completed_tasks, 'priority_tasks': priority_tasks})
 
 
 @login_required
@@ -66,7 +79,6 @@ def delete_task(request, task_id):
 	return redirect('todolist')
 
 @login_required
-
 def edit_task(request, task_id):
     task = TaskList.objects.get(pk=task_id)
     if request.method == 'POST':
@@ -95,10 +107,6 @@ def pending_task(request, task_id):
 	task.done = False
 	task.save()
 	return redirect('todolist')
-	
-def index(request):
-	context = { 'index_text':"Welcome Index Page."}
-	return render(request, 'index.html', context)
 
 def completed(request):
 		all_tasks = TaskList.objects.filter(manage=request.user)

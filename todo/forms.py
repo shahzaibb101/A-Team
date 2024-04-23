@@ -5,9 +5,18 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 class TaskForm(forms.ModelForm):
+	CATEGORY_CHOICES = [
+        ('Fitness', 'Fitness'),
+        ('Nutrition', 'Nutrition'),
+        ('College', 'College'),
+        ('Mindfulness', 'Mindfulness'),
+    ]
+
+	category = forms.ChoiceField(choices=CATEGORY_CHOICES)
+
 	class Meta:
 		model = TaskList
-		fields = ['task','taskDescription','importance', 'points','deadline']
+		fields = ['task','taskDescription','category','importance', 'points','deadline']
 		widgets = {
             'task_Assign_Date': forms.DateInput(attrs={'type': 'date'}),
             'deadline': forms.DateInput(attrs={'type': 'date'}),
